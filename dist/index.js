@@ -4,5 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
+require("./database");
 app_1.default.listen(app_1.default.get('port'));
-console.log("server on port", app_1.default.get('port'));
+console.log(`Listening on http://localhost:${app_1.default.get('port')}`);

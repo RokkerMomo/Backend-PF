@@ -13,7 +13,7 @@ connection.once('open',()=>{
     console.log('MongoDB Connection stablished')
 });
 
-connection.on('error', (err)=>{
+connection.on('errora', (err)=>{
     console.log(err)
     process.exit(0);
 })
