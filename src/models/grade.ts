@@ -3,47 +3,22 @@ import { Model, Schema, Document, model, Date } from "mongoose";
 
 //INTERFACE
 export interface Igrade extends Document {
-    id_profesor:string,
-    nombreCurso:string,
-    seccion:string,
-    fechaInicio:string,
-    fechaFin:string,
-    duracionCurso:number,
-    totalClases:number
+    name:string,
+    desc:string,
+    slogan:string,
+    price:number,
+    url_pic:string,
+    vidId:number
 }
 
 const GradeSchema = new Schema ({
-    id_profesor:{
-        type:String,
-        unique:false,
-        required:true,
-        trim:true
-    },
-    nombreCurso:{
-        type:String,
-        require:true
-    },
-    seccion:{
-        type:String,
-        require:true
-    },
-    fechaInicio:{
-        type:String,
-        require:true
-    },
-    fechaFin:{
-        type:String,
-        require:true
-    },
-    duracionCurso:{
-        type:Number,
-        require:true
-    },
-    totalClases:{
-        type:Number,
-        require:true
-    },
+    name: {type: String, required: true},
+    desc: {type: String, required: true},
+    slogan: {type: String, required: true},
+    price: {type: Number, required: true},
+    url_pic: {type: String, required: true},
+    vidId: {type: Number, required: true},
 });
 
 
-export default model<Igrade>('cursos', GradeSchema);
+export default model<Igrade>('grades', GradeSchema);

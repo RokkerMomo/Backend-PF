@@ -2,7 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const user_controller_1 = require("../controllers/user.controller");
+const grade_controller_1 = require("../controllers/grade.controller");
 const router = (0, express_1.Router)();
 router.post('/signup', user_controller_1.signUp);
 router.post('/signin', user_controller_1.signIn);
+router.get('/grades', grade_controller_1.getGrades);
+router.get('/grades/:id', grade_controller_1.getGrade);
 exports.default = router;

@@ -10,7 +10,7 @@ import specialRoutes from './routes/special.routes';
 const app = express();
 
 // settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 5173);
 
 // middlewares
 app.use(morgan('dev'));

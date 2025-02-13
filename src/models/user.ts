@@ -5,6 +5,13 @@ import bcrypt from 'bcrypt'
 export interface IUser extends Document {
     email:string,
     password:string,
+    name:string,
+    document:string,
+    role:{
+        type:string,
+        default:'user',
+        enum:['user','admin']
+    }
     comparePassword:(p: object) => Response
 }
 
@@ -19,6 +26,19 @@ const UserSchema = new Schema ({
     password:{
         type:String,
         require:true
+    },
+    name:{
+        type:String,
+        required:true
+    },
+    document:{
+        type:String,
+        required:true
+    },
+    role:{
+        type:String,
+        default:'user',
+        enum:['user','admin']
     }
 });
 

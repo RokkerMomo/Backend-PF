@@ -12,7 +12,7 @@ const aut_routes_1 = __importDefault(require("./routes/aut.routes"));
 const special_routes_1 = __importDefault(require("./routes/special.routes"));
 const app = (0, express_1.default)();
 // settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 5173);
 // middlewares
 app.use((0, morgan_1.default)('dev'));
 app.use((0, cors_1.default)());

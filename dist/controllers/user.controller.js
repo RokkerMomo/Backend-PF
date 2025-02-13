@@ -23,10 +23,10 @@ function createToken(user) {
 }
 //REGISTRO
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ msg: 'Make sure you enter the username and password' });
+    if (!req.body.email || !req.body.password || !req.body.name || !req.body.document) {
+        return res.status(400).json({ msg: 'Make sure you enter all the data' });
     }
-    const user = yield user_1.default.findOne({ usuario: req.body.usuario });
+    const user = yield user_1.default.findOne({ usuario: req.body.email });
     if (user) {
         return res.status(400).json({ msg: 'The User you entered already exists' });
     }
@@ -49,7 +49,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const isMatch = yield user.comparePassword(req.body.password);
     if (isMatch) {
-        return res.status(400).json({ token: createToken(user) });
+        return res.status(200).json({ token: createToken(user), role: user.role });
     }
     return res.status(400).json({
         msg: "The email or password are incorrect"
