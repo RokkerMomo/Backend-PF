@@ -7,6 +7,6 @@ const GradeSchema = new mongoose_1.Schema({
     slogan: { type: String, required: true },
     price: { type: Number, required: true },
     url_pic: { type: String, required: true },
-    vidId: { type: Number, required: true },
+    vidId: { type: String, required: true },
 });
 exports.default = (0, mongoose_1.model)('grades', GradeSchema);

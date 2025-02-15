@@ -8,7 +8,7 @@ export interface Igrade extends Document {
     slogan:string,
     price:number,
     url_pic:string,
-    vidId:number
+    vidId:string
 }
 
 const GradeSchema = new Schema ({
@@ -17,7 +17,7 @@ const GradeSchema = new Schema ({
     slogan: {type: String, required: true},
     price: {type: Number, required: true},
     url_pic: {type: String, required: true},
-    vidId: {type: Number, required: true},
+    vidId: {type: String, required: true},
 });
 
 

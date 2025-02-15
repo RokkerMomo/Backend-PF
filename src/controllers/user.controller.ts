@@ -42,7 +42,7 @@ export const signIn: any = async (
 
   const isMatch = await user.comparePassword(req.body.password);
   if (isMatch) {
-    return res.status(200).json({ token: createToken(user), role: user.role });
+    return res.status(200).json({ token: createToken(user), role: user.role , name: user.name, email: user.email, document: user.document });
   }
 
   return res.status(400).json({
