@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import usuarios, { IUser } from "../models/user"
+import hasAccess, { IhasAccess } from "../models/hasAccsess"
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
 
@@ -11,7 +12,7 @@ function createToken(user: IUser) {
 
 //REGISTRO
 export const signUp: any = async (req: Request, res: Response): Promise<Response> => {
-  if (!req.body.email || !req.body.password || !req.body.name || !req.body.document) {
+  if (!req.body.email || !req.body.password || !req.body.name || !req.body.document || !req.body.class) {
     return res.status(400).json({ msg: 'Make sure you enter all the data' })
   }
   const user = await usuarios.findOne({ usuario: req.body.email });
@@ -21,7 +22,18 @@ export const signUp: any = async (req: Request, res: Response): Promise<Response
   //GUARDAR USUARIO
   const newUser = new usuarios(req.body);
   await newUser.save();
+
+  for (let index = 0; index < req.body.class.length; index++) {
+    const newHasAccess = new hasAccess({
+      id_user: newUser._id,
+      id_grade: req.body.class[index],
+    });
+    await newHasAccess.save();
+
+  }
   return res.status(201).json({ newUser, msg: 'Correctly Registered User' });
+
+
 }
 
 //LOGIN
@@ -42,7 +54,7 @@ export const signIn: any = async (
 
   const isMatch = await user.comparePassword(req.body.password);
   if (isMatch) {
-    return res.status(200).json({ token: createToken(user), role: user.role , name: user.name, email: user.email, document: user.document });
+    return res.status(200).json({ token: createToken(user), role: user.role, name: user.name, email: user.email, document: user.document });
   }
 
   return res.status(400).json({

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const hasAccsess_1 = __importDefault(require("../models/hasAccsess"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config/config"));
 function createToken(user) {
@@ -23,7 +24,7 @@ function createToken(user) {
 }
 //REGISTRO
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.email || !req.body.password || !req.body.name || !req.body.document) {
+    if (!req.body.email || !req.body.password || !req.body.name || !req.body.document || !req.body.class) {
         return res.status(400).json({ msg: 'Make sure you enter all the data' });
     }
     const user = yield user_1.default.findOne({ usuario: req.body.email });
@@ -33,6 +34,13 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //GUARDAR USUARIO
     const newUser = new user_1.default(req.body);
     yield newUser.save();
+    for (let index = 0; index < req.body.class.length; index++) {
+        const newHasAccess = new hasAccsess_1.default({
+            id_user: newUser._id,
+            id_grade: req.body.class[index],
+        });
+        yield newHasAccess.save();
+    }
     return res.status(201).json({ newUser, msg: 'Correctly Registered User' });
 });
 exports.signUp = signUp;
