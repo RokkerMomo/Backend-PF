@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signIn = exports.signUp = void 0;
+exports.getUserById = exports.getUsersWithRoleUser = exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const grade_1 = __importDefault(require("../models/grade"));
 const hasAccsess_1 = __importDefault(require("../models/hasAccsess"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config/config"));
@@ -64,3 +65,33 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.signIn = signIn;
+// Get Users with Role "user"
+const getUsersWithRoleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield user_1.default.find({ role: 'user' });
+        return res.status(200).json(users);
+    }
+    catch (error) {
+        return res.status(500).json({ msg: 'Error retrieving users', error });
+    }
+});
+exports.getUsersWithRoleUser = getUsersWithRoleUser;
+// Get User by ID
+const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const user = yield user_1.default.findById(id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        // Find the grades the user has access to
+        const accessRecords = yield hasAccsess_1.default.find({ id_user: id });
+        const gradeIds = accessRecords.map(record => record.id_grade);
+        const grades = yield grade_1.default.find({ _id: { $in: gradeIds } });
+        return res.status(200).json({ user, grades });
+    }
+    catch (error) {
+        return res.status(500).json({ msg: 'Error retrieving user', error });
+    }
+});
+exports.getUserById = getUserById;

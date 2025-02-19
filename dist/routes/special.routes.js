@@ -32,4 +32,9 @@ function isAdmin(req, res, next) {
 router.get("/special", passport_1.default.authenticate("jwt", { session: false }), special_controller_1.special);
 router.post('/NewGrade', passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.NewGrade);
 router.post('/signup', passport_1.default.authenticate("jwt", { session: false }), isAdmin, user_controller_1.signUp);
+router.get('/getGradesTable', passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.getGradesTable);
+router.get('/getUsersWithRoleUser', passport_1.default.authenticate('jwt', { session: false }), isAdmin, user_controller_1.getUsersWithRoleUser);
+router.get('/getUserById/:id', passport_1.default.authenticate('jwt', { session: false }), isAdmin, user_controller_1.getUserById);
+router.put("/updateGrade/:id", passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.updateGrade);
+router.delete("/DeleteGrade/:id", passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.deleteGrade);
 exports.default = router;

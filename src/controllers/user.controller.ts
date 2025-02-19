@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import usuarios, { IUser } from "../models/user"
+import grade from "../models/grade";
 import hasAccess, { IhasAccess } from "../models/hasAccsess"
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
@@ -61,3 +62,37 @@ export const signIn: any = async (
     msg: "The email or password are incorrect"
   });
 };
+
+
+// Get Users with Role "user"
+export const getUsersWithRoleUser: any = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const users = await usuarios.find({ role: 'user' });
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ msg: 'Error retrieving users', error });
+  }
+};
+
+
+// Get User by ID
+export const getUserById: any = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+    const user = await usuarios.findById(id);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Find the grades the user has access to
+    const accessRecords = await hasAccess.find({ id_user: id });
+    const gradeIds = accessRecords.map(record => record.id_grade);
+    const grades = await grade.find({ _id: { $in: gradeIds } });
+
+    return res.status(200).json({ user, grades });
+  } catch (error) {
+    return res.status(500).json({ msg: 'Error retrieving user', error });
+  }
+};
+
+
