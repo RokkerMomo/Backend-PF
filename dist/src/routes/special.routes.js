@@ -30,6 +30,7 @@ function isAdmin(req, res, next) {
     })(req, res, next);
 }
 router.get("/special", passport_1.default.authenticate("jwt", { session: false }), special_controller_1.special);
+router.get("/wtf", passport_1.default.authenticate("jwt", { session: false }), special_controller_1.special);
 router.post('/NewGrade', passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.NewGrade);
 router.post('/signup', passport_1.default.authenticate("jwt", { session: false }), isAdmin, user_controller_1.signUp);
 router.get('/getGradesTable', passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.getGradesTable);

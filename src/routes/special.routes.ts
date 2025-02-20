@@ -4,7 +4,7 @@ import passport from "passport";
 const router = Router();
 
 import { special } from "../controllers/special.controller";
-import { deleteGrade, getGradesTable, NewGrade, updateGrade } from "../controllers/grade.controller";
+import { deleteGrade, getGradesTable, getUserGrades, NewGrade, updateGrade } from "../controllers/grade.controller";
 import { deleteUser, getUserById, getUsersWithRoleUser, signUp, updateUser } from "../controllers/user.controller";
 
 // Middleware to check if the user is an admin
@@ -36,6 +36,13 @@ function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 router.get(
   "/special",
+  passport.authenticate("jwt", { session: false }),
+  special
+);
+
+
+router.get(
+  "/wtf",
   passport.authenticate("jwt", { session: false }),
   special
 );

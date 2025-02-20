@@ -83,3 +83,27 @@ export const deleteGrade: any = async (req: Request, res: Response): Promise<Res
     }
     return res.status(200).json({ msg: 'Grade deleted successfully' });
 }
+
+// Get User Grades
+export const getUserGrades: any = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { id } = req.params;
+        console.log(`Fetching grades for user ID: ${id}`);
+
+        // Find the grades the user has access to
+        const accessRecords = await hasAccess.find({ id_user: id });
+        console.log(`Access records found: ${accessRecords.length}`);
+
+        if (accessRecords.length === 0) {
+            return res.status(404).json({ msg: 'No grades found for this user' });
+        }
+
+        const gradeIds = accessRecords.map(record => record.id_grade);
+        const grades = await grade.find({ _id: { $in: gradeIds } });
+
+        return res.status(200).json(grades);
+    } catch (error) {
+        console.error('Error retrieving user grades:', error);
+        return res.status(500).json({ msg: 'Error retrieving user grades', error });
+    }
+}
