@@ -85,6 +85,8 @@ exports.updateGrade = updateGrade;
 // Delete Grade
 const deleteGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
+    // Delete user's access to grades
+    yield hasAccsess_1.default.deleteMany({ id_grade: id });
     const deletedGrade = yield grade_1.default.findByIdAndDelete(id);
     if (!deletedGrade) {
         return res.status(404).json({ msg: 'Grade not found' });

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.getUsersWithRoleUser = exports.signIn = exports.signUp = void 0;
+exports.deleteUser = exports.updateUser = exports.getUserById = exports.getUsersWithRoleUser = exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const grade_1 = __importDefault(require("../models/grade"));
 const hasAccsess_1 = __importDefault(require("../models/hasAccsess"));
@@ -95,3 +95,47 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getUserById = getUserById;
+// Update User
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        // const { class: classIds, ...updateData } = req.body;
+        // Update user data
+        const updatedUser = yield user_1.default.findByIdAndUpdate(id, req.body.updateData, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        // Update user's access to grades
+        yield hasAccsess_1.default.deleteMany({ id_user: id });
+        for (let index = 0; index < req.body.classIds.length; index++) {
+            const newHasAccess = new hasAccsess_1.default({
+                id_user: id,
+                id_grade: req.body.classIds[index],
+            });
+            yield newHasAccess.save();
+        }
+        return res.status(200).json({ updatedUser, msg: 'User updated successfully' });
+    }
+    catch (error) {
+        return res.status(500).json({ msg: 'Error updating user', error });
+    }
+});
+exports.updateUser = updateUser;
+// Delete User
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        // Delete user's access to grades
+        yield hasAccsess_1.default.deleteMany({ id_user: id });
+        // Delete user
+        const deletedUser = yield user_1.default.findByIdAndDelete(id);
+        if (!deletedUser) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        return res.status(200).json({ msg: 'User deleted successfully' });
+    }
+    catch (error) {
+        return res.status(500).json({ msg: 'Error deleting user', error });
+    }
+});
+exports.deleteUser = deleteUser;

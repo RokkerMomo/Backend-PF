@@ -96,3 +96,53 @@ export const getUserById: any = async (req: Request, res: Response): Promise<Res
 };
 
 
+// Update User
+export const updateUser: any = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+    // const { class: classIds, ...updateData } = req.body;
+
+    // Update user data
+    const updatedUser = await usuarios.findByIdAndUpdate(id, req.body.updateData, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Update user's access to grades
+    await hasAccess.deleteMany({ id_user: id });
+    for (let index = 0; index < req.body.classIds.length; index++) {
+      const newHasAccess = new hasAccess({
+        id_user: id,
+        id_grade: req.body.classIds[index],
+      });
+      await newHasAccess.save();
+    }
+
+    return res.status(200).json({ updatedUser, msg: 'User updated successfully' });
+  } catch (error) {
+    return res.status(500).json({ msg: 'Error updating user', error });
+  }
+};
+
+
+// Delete User
+export const deleteUser: any = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+
+    // Delete user's access to grades
+    await hasAccess.deleteMany({ id_user: id });
+
+    // Delete user
+    const deletedUser = await usuarios.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    return res.status(200).json({ msg: 'User deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ msg: 'Error deleting user', error });
+  }
+};
+
+

@@ -5,7 +5,7 @@ const router = Router();
 
 import { special } from "../controllers/special.controller";
 import { deleteGrade, getGradesTable, NewGrade, updateGrade } from "../controllers/grade.controller";
-import { getUserById, getUsersWithRoleUser, signUp } from "../controllers/user.controller";
+import { deleteUser, getUserById, getUsersWithRoleUser, signUp, updateUser } from "../controllers/user.controller";
 
 // Middleware to check if the user is an admin
 import { Request, Response, NextFunction } from "express";
@@ -50,7 +50,9 @@ router.get('/getUsersWithRoleUser', passport.authenticate('jwt', { session: fals
 router.get('/getUserById/:id', passport.authenticate('jwt', { session: false }), isAdmin, getUserById)
 
 router.put("/updateGrade/:id", passport.authenticate('jwt', { session: false }), isAdmin, updateGrade);
+router.put("/updateUser/:id", passport.authenticate('jwt', { session: false }), isAdmin, updateUser)
 
 router.delete("/DeleteGrade/:id", passport.authenticate('jwt', { session: false }), isAdmin, deleteGrade);
+router.delete("/deleteUser/:id", passport.authenticate('jwt', { session: false }), isAdmin, deleteUser)
 
 export default router;
