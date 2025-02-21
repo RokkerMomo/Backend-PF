@@ -3,7 +3,7 @@ import grade from "../models/grade";
 import hasAccess, { IhasAccess } from "../models/hasAccsess"
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
-
+import usuarios, { IUser } from "../models/user"
 
 
 //NewGrade
@@ -90,6 +90,18 @@ export const getUserGrades: any = async (req: Request, res: Response): Promise<R
         const { id } = req.params;
         console.log(`Fetching grades for user ID: ${id}`);
 
+        // Find the user by ID
+        const user = await usuarios.findById(id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        // Check if the user is an admin
+        if (user.role.toString() === 'admin') {
+            const grades = await grade.find();
+            return res.status(200).json(grades);
+        }
+
         // Find the grades the user has access to
         const accessRecords = await hasAccess.find({ id_user: id });
         console.log(`Access records found: ${accessRecords.length}`);
@@ -106,4 +118,4 @@ export const getUserGrades: any = async (req: Request, res: Response): Promise<R
         console.error('Error retrieving user grades:', error);
         return res.status(500).json({ msg: 'Error retrieving user grades', error });
     }
-}
+};

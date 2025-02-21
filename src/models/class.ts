@@ -14,4 +14,4 @@ const ClassSchema = new Schema ({
     url_vid: {type: String, required: true}
 });
 
-export default model<IClass>('hasAccess', ClassSchema);
+export default model<IClass>('classes', ClassSchema);

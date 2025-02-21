@@ -7,4 +7,4 @@ const ClassSchema = new mongoose_1.Schema({
     date: { type: Date, required: true },
     url_vid: { type: String, required: true }
 });
-exports.default = (0, mongoose_1.model)('classes', ClassSchema);
+exports.default = (0, mongoose_1.model)('hasAccess', ClassSchema);

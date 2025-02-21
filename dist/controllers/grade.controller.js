@@ -23,9 +23,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteGrade = exports.updateGrade = exports.getGradesTable = exports.getGrade = exports.getGrades = exports.NewGrade = void 0;
+exports.getUserGrades = exports.deleteGrade = exports.updateGrade = exports.getGradesTable = exports.getGrade = exports.getGrades = exports.NewGrade = void 0;
 const grade_1 = __importDefault(require("../models/grade"));
 const hasAccsess_1 = __importDefault(require("../models/hasAccsess"));
+const user_1 = __importDefault(require("../models/user"));
 //NewGrade
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.name || !req.body.desc || !req.body.slogan || !req.body.price || !req.body.url_pic || !req.body.vidId) {
@@ -94,3 +95,34 @@ const deleteGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     return res.status(200).json({ msg: 'Grade deleted successfully' });
 });
 exports.deleteGrade = deleteGrade;
+// Get User Grades
+const getUserGrades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        console.log(`Fetching grades for user ID: ${id}`);
+        // Find the user by ID
+        const user = yield user_1.default.findById(id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+        // Check if the user is an admin
+        if (user.role.toString() === 'admin') {
+            const grades = yield grade_1.default.find();
+            return res.status(200).json(grades);
+        }
+        // Find the grades the user has access to
+        const accessRecords = yield hasAccsess_1.default.find({ id_user: id });
+        console.log(`Access records found: ${accessRecords.length}`);
+        if (accessRecords.length === 0) {
+            return res.status(404).json({ msg: 'No grades found for this user' });
+        }
+        const gradeIds = accessRecords.map(record => record.id_grade);
+        const grades = yield grade_1.default.find({ _id: { $in: gradeIds } });
+        return res.status(200).json(grades);
+    }
+    catch (error) {
+        console.error('Error retrieving user grades:', error);
+        return res.status(500).json({ msg: 'Error retrieving user grades', error });
+    }
+});
+exports.getUserGrades = getUserGrades;

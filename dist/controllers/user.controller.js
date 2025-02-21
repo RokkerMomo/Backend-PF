@@ -58,7 +58,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const isMatch = yield user.comparePassword(req.body.password);
     if (isMatch) {
-        return res.status(200).json({ token: createToken(user), role: user.role, name: user.name, email: user.email, document: user.document });
+        return res.status(200).json({ token: createToken(user), role: user.role, name: user.name, email: user.email, document: user.document, id: user._id });
     }
     return res.status(400).json({
         msg: "The email or password are incorrect"
