@@ -32,10 +32,10 @@ export const createClass: any = async (req: Request, res: Response): Promise<Res
 // Get all classes by grade
 export const getClassesByGrade: any = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const { id_grade } = req.params;
+        const { id } = req.params;
 
         // Find all classes with the specified grade ID
-        const classesList = await classes.find({ id_grade });
+        const classesList = await classes.find({ id_grade:id });
 
         if (classesList.length === 0) {
             return res.status(404).json({ msg: 'No classes found for this grade' });

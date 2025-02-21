@@ -56,7 +56,7 @@ router.post('/createClass', passport.authenticate("jwt", { session: false }), is
 router.get('/getGradesTable', passport.authenticate('jwt', { session: false }), isAdmin, getGradesTable)
 router.get('/getUsersWithRoleUser', passport.authenticate('jwt', { session: false }), isAdmin, getUsersWithRoleUser)
 router.get('/getUserById/:id', passport.authenticate('jwt', { session: false }), isAdmin, getUserById)
-router.get('/getClassesByGrade/:id', passport.authenticate('jwt', { session: false }), isAdmin,getClassesByGrade)
+router.get('/getClassesByGrade/:id', passport.authenticate('jwt', { session: false }),getClassesByGrade)
 
 router.put("/updateGrade/:id", passport.authenticate('jwt', { session: false }), isAdmin, updateGrade);
 router.put("/updateUser/:id", passport.authenticate('jwt', { session: false }), isAdmin, updateUser)

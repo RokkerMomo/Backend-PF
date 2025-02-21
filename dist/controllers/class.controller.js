@@ -41,9 +41,9 @@ exports.createClass = createClass;
 // Get all classes by grade
 const getClassesByGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_grade } = req.params;
+        const { id } = req.params;
         // Find all classes with the specified grade ID
-        const classesList = yield class_1.default.find({ id_grade });
+        const classesList = yield class_1.default.find({ id_grade: id });
         if (classesList.length === 0) {
             return res.status(404).json({ msg: 'No classes found for this grade' });
         }

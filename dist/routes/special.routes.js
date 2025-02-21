@@ -38,7 +38,7 @@ router.post('/createClass', passport_1.default.authenticate("jwt", { session: fa
 router.get('/getGradesTable', passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.getGradesTable);
 router.get('/getUsersWithRoleUser', passport_1.default.authenticate('jwt', { session: false }), isAdmin, user_controller_1.getUsersWithRoleUser);
 router.get('/getUserById/:id', passport_1.default.authenticate('jwt', { session: false }), isAdmin, user_controller_1.getUserById);
-router.get('/getClassesByGrade/:id', passport_1.default.authenticate('jwt', { session: false }), isAdmin, class_controller_1.getClassesByGrade);
+router.get('/getClassesByGrade/:id', passport_1.default.authenticate('jwt', { session: false }), class_controller_1.getClassesByGrade);
 router.put("/updateGrade/:id", passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.updateGrade);
 router.put("/updateUser/:id", passport_1.default.authenticate('jwt', { session: false }), isAdmin, user_controller_1.updateUser);
 router.delete("/DeleteGrade/:id", passport_1.default.authenticate('jwt', { session: false }), isAdmin, grade_controller_1.deleteGrade);
