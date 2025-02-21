@@ -21,7 +21,7 @@ app.use(express_1.default.json());
 app.use(passport_1.default.initialize());
 passport_1.default.use(passport_2.default);
 app.get('/', (req, res) => {
-    return res.send(`The API is at http://localhost:${app.get('port')}`);
+    return res.send(`the mongouri is ${process.env.MONGODB_URI} The API is at http://localhost:${app.get('port')}`);
 });
 app.use(aut_routes_1.default);
 app.use(special_routes_1.default);
