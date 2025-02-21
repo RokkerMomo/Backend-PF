@@ -21,7 +21,7 @@ app.use(passport.initialize());
 passport.use(passportMiddleware);
 
 app.get('/', (req:any, res:any) => {
-  return res.send(`the mongouri is ${process.env.MONGODB_URI} The API is at http://localhost:${app.get('port')}`);
+  return res.send(`The API is at http://localhost:${app.get('port')}`);
 })
 
 app.use(authRoutes);
