@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserGrades = exports.deleteGrade = exports.updateGrade = exports.getGradesTable = exports.getGrade = exports.getGrades = exports.NewGrade = void 0;
 const grade_1 = __importDefault(require("../models/grade"));
 const hasAccsess_1 = __importDefault(require("../models/hasAccsess"));
+const class_1 = __importDefault(require("../models/class"));
 const user_1 = __importDefault(require("../models/user"));
 //NewGrade
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,10 +49,21 @@ const getGrades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).json(grades);
 });
 exports.getGrades = getGrades;
-//get Grade
+// get Grade
 const getGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const grades = yield grade_1.default.findById(req.params.id);
-    return res.status(200).json(grades);
+    try {
+        const gradeData = yield grade_1.default.findById(req.params.id);
+        if (!gradeData) {
+            return res.status(404).json({ msg: 'Grade not found' });
+        }
+        const studentCount = yield hasAccsess_1.default.countDocuments({ id_grade: req.params.id });
+        const classCount = yield class_1.default.countDocuments({ id_grade: req.params.id });
+        return res.status(200).json(Object.assign(Object.assign({}, gradeData.toObject()), { students: studentCount, classes: classCount }));
+    }
+    catch (error) {
+        console.error('Error retrieving grade:', error);
+        return res.status(500).json({ msg: 'Error retrieving grade', error });
+    }
 });
 exports.getGrade = getGrade;
 // get Grades Table

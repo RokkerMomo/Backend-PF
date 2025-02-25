@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import grade from "../models/grade";
 import hasAccess, { IhasAccess } from "../models/hasAccsess"
+import classes from "../models/class";
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
 import usuarios, { IUser } from "../models/user"
@@ -28,11 +29,23 @@ export const getGrades: any = async (req: Request, res: Response): Promise<Respo
     return res.status(200).json(grades);
 }
 
-//get Grade
+// get Grade
 export const getGrade: any = async (req: Request, res: Response): Promise<Response> => {
-    const grades = await grade.findById(req.params.id);
-    return res.status(200).json(grades);
-}
+    try {
+        const gradeData = await grade.findById(req.params.id);
+        if (!gradeData) {
+            return res.status(404).json({ msg: 'Grade not found' });
+        }
+
+        const studentCount = await hasAccess.countDocuments({ id_grade: req.params.id });
+        const classCount = await classes.countDocuments({ id_grade: req.params.id })
+
+        return res.status(200).json({ ...gradeData.toObject(), students: studentCount, classes: classCount });
+    } catch (error) {
+        console.error('Error retrieving grade:', error);
+        return res.status(500).json({ msg: 'Error retrieving grade', error });
+    }
+};
 
 
 // get Grades Table
